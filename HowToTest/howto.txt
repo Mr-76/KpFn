@@ -1,0 +1,19 @@
+In C, there are a few libraries that can be used to get information about system processes.
+
+One commonly used library is the proc library, which provides a way to read information from the /proc file system. The /proc file system is a virtual file system in Linux that provides information about system resources, including running processes.
+
+Another option is the sys/sysinfo.h library which gives the system uptime and other information about the system like total ram and processes.
+
+Additionally, the task_info() and mach_task_self() functions from the mach/mach.h library can be used to get information about processes on macOS. On Windows you can use CreateToolhelp32Snapshot(), Process32First(), Process32Next() from the tlhelp32.h and psapi.h libraries.
+
+However, keep in mind that the specifics of the implementation will depend on the operating system you're running your code on.
+
+
+In Linux, one common way to get information about system processes is by reading the /proc file system. The /proc file system is a virtual file system that provides information about system resources, including running processes.
+
+One way to read information from the /proc file system is to use the proc library. This library provides an API to read information from the /proc file system. You can use the proc library to read process-specific information from the /proc file system and get information about running processes.
+
+Alternatively, you can use the system calls and functions provided by the Operating System, such as getpid() to get process id of the current process,getppid() to get the parent process id , kill() to send signal to a process,wait() to wait for child process termination and other family of process management system calls.
+
+You can also use command-line tools such as ps, top, htop to list the running processes and gather the desired information.
+You can use libraries such as libproc to parse the information of /proc/[pid]/task/[tid]/status directly, but it is not provided as standard library.
