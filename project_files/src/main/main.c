@@ -1,5 +1,5 @@
-#include "../readDirs/readAllDirs.h"
 #include "../killPart/kill.h"
+#include "../readDirs/readAllDirs.h"
 #include <stdio.h>
 
 int main(int argc, char *argv[]) {
@@ -7,8 +7,12 @@ int main(int argc, char *argv[]) {
     printf("Usage: %s <program name> and flag <-NP> or <-P>\n", argv[0]);
     return 1;
   }
-  findProcess(argv[1], argv[2]);
-  printf("2nd part\n");
-  killProgram();
+  int valid = findProcess(argv[1], argv[2]);
+  if (valid == 1) {
+    printf("2nd part\n");
+    killProgram();
+  } else {
+    printf("invalid try again\n");
+  }
   return 0;
 }

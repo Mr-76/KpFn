@@ -15,37 +15,57 @@ const char *readContend(char *path) {
   return c;
 }
 
-int findProcess(char *process_name, const char *flag) {
-  DIR *dir;
-  struct dirent *entry;
-  struct stat statbuf;
-  char *elfile = "comm";
-  char path[1024];
-
-  dir = opendir("/proc");
-
-  if (dir == NULL) {
-    perror("opendir");
-    return 1;
+int flag_validator(char *flag) {
+  int valid = 0;
+  if (0 == strcmp("-NP", flag)) {
+    valid = 1;
+  } else if (0 == strcmp("-P", flag)) {
+    valid = 1;
+  } else {
+    printf("Wrong flag \n");
   }
+  return valid;
+}
 
-  while ((entry = readdir(dir)) != NULL) {
-    if (entry->d_type == DT_DIR) {
+int findProcess(char *process_name, const char *flag) {
+  int found = 0;
+  if (0 == flag_validator(flag)) {
+  } else {
 
-      snprintf(path, sizeof(path), "%s/%s/%s", "/proc", entry->d_name, elfile);
+    DIR *dir;
+    struct dirent *entry;
+    struct stat statbuf;
+    char *elfile = "comm";
+    char path[1024];
 
-      if (stat(path, &statbuf) == 0) {
-        const char *read_name_Fpid = readContend(path);
-        if (0 == patterMach(process_name, read_name_Fpid, flag)) {
-          printf("FOUND MATCH PID  %s OF NAME %s \n", entry->d_name,
-                 read_name_Fpid);
+    dir = opendir("/proc");
+
+    if (dir == NULL) {
+      perror("opendir");
+      return 1;
+    }
+
+    while ((entry = readdir(dir)) != NULL) {
+      if (entry->d_type == DT_DIR) {
+
+        snprintf(path, sizeof(path), "%s/%s/%s", "/proc", entry->d_name,
+                 elfile);
+
+        if (stat(path, &statbuf) == 0) {
+          const char *read_name_Fpid = readContend(path);
+          if (0 == patterMach(process_name, read_name_Fpid, flag)) {
+            printf("FOUND MATCH PID  %s OF NAME %s \n", entry->d_name,
+                   read_name_Fpid);
+            found = 1;
+          }
         }
       }
     }
+
+    closedir(dir);
   }
 
-  closedir(dir);
-  return 0;
+  return found;
 }
 
 int patterMach(char *search, const char *found, const char *flag) {
@@ -62,9 +82,7 @@ int patterMach(char *search, const char *found, const char *flag) {
       }
     }
   } else {
-    printf("Invalid flag or search word too big\n");
     result = 1;
   }
-
   return result;
 }
