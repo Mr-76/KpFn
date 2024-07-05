@@ -1,3 +1,3 @@
 cmake -B build/ .
-
-make /build/
+cd build && make
+mv kpfn ../..
